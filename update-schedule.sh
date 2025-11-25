@@ -1,6 +1,12 @@
 #!/bin/bash
-SHEET_URL=""
 SCRIPT_DIR="$HOME/tati-tv"
+
+# Load environment variables from .env file
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    source "$SCRIPT_DIR/.env"
+fi
+
+SHEET_URL="${TATI_TV_SHEET_URL}"
 VIDEOS_DIR="$HOME/filme-tati"
 YTDLP="$HOME/yt-dlp"
 SCHEDULE_CSV="$SCRIPT_DIR/schedule.csv"
@@ -47,7 +53,7 @@ tail -n +2 "$SCHEDULE_CSV" | while IFS=, read -r day time url title; do
     
     if [ ! -f "$video_file" ]; then
         echo "  Downloading..."
-        "$YTDLP" "$url" -o "$video_file" -f "bestvideo[vcodec^=avc1][height<=1080]+bestaudio[ext=m4a]/best[vcodec^=avc1]" --no-warnings
+        "$YTDLP" "$url" -o "$video_file" -f "bestvideo[vcodec^=avc1][height<=720]+bestaudio[ext=m4a]/best[vcodec^=avc1][height<=720]" --no-warnings
     else
         echo "  Already have it"
     fi
